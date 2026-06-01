@@ -2,14 +2,7 @@
 
 import requests
 from overwatch_hero_stats.logger import Logger
-
-
-class HeroFilters:
-    def __init__(self):
-        self.current_params="?input=PC&map=all-maps&region=Americas&role=All&rq=2&tier=Silver"
-
-    def export_params(self):
-        return self.current_params
+from .hero_filters import HeroFilters
 
 
 class HeroDataFetcher:
@@ -29,12 +22,12 @@ class HeroDataFetcher:
         url = self.assembleURL(herofilters)
         self.logger.debug(f"Fetching from URL:{url}")
         try:
-            r = requests.get(url)
+            pass #r = requests.get(url)
         except Exception as e:
             self.logger.error(f"Invalid URL:{e}")
             return hero_dict
         try:
-            hero_dict = r.json()
+            pass #hero_dict = r.json()
             # print(hero_dict)
         except Exception as e:
             print(f"Response was not JSON:{e}")
