@@ -4,7 +4,7 @@ import requests
 from overwatch_hero_stats.logger import Logger
 
 
-class HeroOptions:
+class HeroFilters:
     def __init__(self):
         self.current_params="?input=PC&map=all-maps&region=Americas&role=All&rq=2&tier=Silver"
 
@@ -17,16 +17,16 @@ class HeroDataFetcher:
         self.URL = "https://overwatch.blizzard.com/en-us/rates/data/"
         self.logger = Logger()
 
-    def assembleURLFromOptions(self, options: HeroOptions) -> str:
+    def assembleURL(self, herofilters: HeroFilters) -> str:
         url = self.URL
-        # Options here
-        url += options.export_params()
+        # herofilters here
+        url += herofilters.export_params()
         return url
 
-    def fetch_data(self, options: HeroOptions) -> dict:
+    def fetch_data(self, herofilters: HeroFilters) -> dict:
         hero_dict :dict = {}
 
-        url = self.assembleURLFromOptions(options)
+        url = self.assembleURL(herofilters)
         self.logger.debug(f"Fetching from URL:{url}")
         try:
             r = requests.get(url)
