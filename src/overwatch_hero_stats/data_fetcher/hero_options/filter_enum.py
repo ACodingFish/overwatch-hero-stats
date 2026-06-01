@@ -14,9 +14,10 @@ class FilterEnum(Enum):
     # Ex. For state switching:
     #     self.map = self.map.get_state_at_index(3)
     @classmethod
-    def get_state_at_index(self, index):
+    def get_state_at_index(self, index:int):
         if (index < len(self.__members__)):
             return self(index)
+
     
     def value_name(self):
         return self.name.replace("-","_")

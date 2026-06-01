@@ -4,7 +4,7 @@ import requests
 from overwatch_hero_stats.logger import Logger
 from .hero_filters import HeroFilters
 
-TEST_MODE = True
+TEST_MODE = False
 
 if TEST_MODE:
     from .fake_data import fake_data
@@ -30,6 +30,12 @@ class HeroDataFetcher:
         if TEST_MODE:
             self.logger.debug("Fake Data")
             return fake_data
+        else:
+            #Don't cause a load on servers
+            from time import sleep
+            from random import randint
+            sleep_sec = randint(1,3)
+            sleep(sleep_sec)
         
         try:
             r = requests.get(url)
@@ -74,7 +80,7 @@ class HeroDataFetcher:
 
         hero_dict = self.get_hero_dict()
 
-        rate_data : dict = self.generic_data.get("rates", {})
+        rate_data : dict = data.get("rates", {})
         rate_list : list = rate_data.get("rates", [])
 
         hero_winrates = {}
@@ -85,6 +91,42 @@ class HeroDataFetcher:
             winrate: dict = self.get_winrate_for_hero(hero_id, rate_list)
             hero_winrates[hero_id] = winrate
         return hero_winrates
+            
+    def get_best_hero(self, hero_ids: dict[str]=["anran", "genji", "soldier-76"], data: dict = {}, count = 1):
+        hero_winrates = self.get_winrates_for_heroes(hero_ids=hero_ids, data=data)
+        hero_queue : list = []
+        for hero_id in hero_ids:
+            hero_data = hero_winrates.get(hero_id, {})
+
+            winrate = hero_data.get("winrate", 0)
+            if not winrate:
+                continue
+
+            pickrate = hero_data.get("pickrate", 0)
+            if not pickrate:
+                continue
+
+            idx = 0
+            for hero in hero_queue:
+                queued_winrate = hero[1].get("winrate", 0)
+                queued_pickrate = hero[1].get("pickrate", 0)
+                if queued_winrate > winrate:
+                    idx+=1
+                elif (queued_winrate == winrate) and (queued_pickrate < pickrate):
+                    idx+=1
+                else:
+                    break
+
+            hero_queue.insert(idx, (hero_id, hero_data))
+            
+
+            if len(hero_queue) > count:
+                hero_queue.pop()
+            
+        return hero_queue
+    
+    # Find sleepers - >50% winrate, but low usage < 5%
+            
             
 
 
