@@ -1,6 +1,3 @@
-@REM if $($(Get-Command deactivate -ErrorAction SilentlyContinue).CommandType -eq "Function") {
-@REM     echo "Hello"
-@REM }
 @echo off
 
 FOR /F "usebackq delims=" %%A IN (`python -c "import sys; print(sys.prefix)"`) DO (
@@ -13,7 +10,6 @@ FOR /F "usebackq delims=" %%A IN (`python -c "import sys; print(sys.base_prefix)
 
 set "venvstr=venv"
 
-@REM set AHHHHH=/f python -c "exec(\"import sys\nprint(sys.prefix)\")"
 if NOT "%base_prefix%"=="%prefix%" (
     if NOT "%prefix:%venvstr%=%" == "%prefix%" (
         echo We are in the VENV
