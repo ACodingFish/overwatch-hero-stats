@@ -9,13 +9,14 @@ from .hero_options.hero_tier import HeroTier
 
 from enum import Enum
 
-class FilterType(Enum):
+class HFType(Enum):
     INPUT=0
     MAP=1
     REGION=2
     ROLE=3
     QUEUE_TYPE=4
     TIER=5
+    FILTER_MAX=6
 
 
 class HeroFilters:
@@ -36,3 +37,7 @@ class HeroFilters:
                 param_list.append("=".join([filter.filter_name(), filter.value_param()]))
 
         return "?" + "&".join(param_list)
+    
+    def set_filter_value(self, filter:HFType, index: int):
+        if (filter.value < HFType.FILTER_MAX.value):
+            self.filters[filter.value] = self.filters[filter.value].get_state_at_index(index)

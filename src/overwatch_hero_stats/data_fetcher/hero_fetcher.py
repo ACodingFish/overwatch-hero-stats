@@ -55,6 +55,6 @@ class HeroDataFetcher:
                 hero_data.pop("portrait", "")
                 hero_data.pop("roleIcon", "")
                 hero_dict[hero_id] = hero_data
-        self.logger.debug(hero_dict)
+        # self.logger.debug(hero_dict)
 
         return hero_dict
