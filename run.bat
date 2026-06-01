@@ -1,2 +1,2 @@
-pip install .
-python -m overwatch-hero-stats
+pip install -e .
+python -m overwatch_hero_stats
