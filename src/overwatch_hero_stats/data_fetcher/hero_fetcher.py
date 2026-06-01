@@ -2,9 +2,9 @@
 
 import requests
 from overwatch_hero_stats.logger import Logger
-from .hero_filters import HeroFilters
+from .hero_filters import HeroFilters, HFType
 
-TEST_MODE = True
+TEST_MODE = False
 
 if TEST_MODE:
     from .fake_data import fake_data
@@ -25,11 +25,11 @@ class HeroDataFetcher:
         hero_dict :dict = {}
 
         url = self._assemble_URL(herofilters)
-        self.logger.debug(f"Fetching from URL:{url}")
+        # self.logger.debug(f"Fetching from URL:{url}")
 
         if TEST_MODE:
             self.logger.debug("Fake Data")
-            return fake_data
+            hero_dict : dict = fake_data
         else:
             #Don't cause a load on servers
             from time import sleep
@@ -37,15 +37,26 @@ class HeroDataFetcher:
             sleep_sec = randint(1,3)
             sleep(sleep_sec)
         
-        try:
-            r = requests.get(url)
-        except Exception as e:
-            self.logger.error(f"Invalid URL:{e}")
-            return hero_dict
-        try:
-            hero_dict : dict = r.json()
-        except Exception as e:
-            self.logger.error(f"Response was not JSON:{e}")
+            try:
+                r = requests.get(url)
+            except Exception as e:
+                self.logger.error(f"Invalid URL:{e}")
+                return hero_dict
+            try:
+                hero_dict : dict = r.json()
+            except Exception as e:
+                self.logger.error(f"Response was not JSON:{e}")
+
+
+        # Role filter doesn't do anything on API side, handle locally
+        role = herofilters.filters[HFType.ROLE.value].value_name()
+        if (role.lower() != "all"):
+            role_heroes = self.get_hero_dict_by_role(role).keys()
+            rate_data : dict = hero_dict.get("rates", {})
+            rate_list : list = rate_data.get("rates", [])
+            new_rate_list : list = [rate for rate in rate_list if rate.get("id","") in role_heroes]
+            rate_data["rates"] = new_rate_list
+            hero_dict["rates"] = rate_data
         return hero_dict
     
     def get_hero_dict(self) -> dict:
@@ -64,6 +75,20 @@ class HeroDataFetcher:
         # self.logger.debug(hero_dict)
 
         return hero_dict
+    
+    def get_hero_dict_by_role(self, role: str = "All"):
+        hero_dict : dict = self.get_hero_dict()
+        role_filter = role.lower()
+        if (role_filter == "all"):
+            return hero_dict
+        
+        filtered_hero_dict = {}
+        for hero_id, hero_data in hero_dict.items():
+            hero_role = hero_data.get("role", "").lower()
+            hero_subrole = hero_data.get("subrole", "").lower()
+            if (role_filter == hero_role) or (role_filter == hero_subrole):
+                filtered_hero_dict[hero_id] = hero_data
+        return filtered_hero_dict
     
     def get_winrate_for_hero(self, hero_id : str = "anran", rate_list: list = []):
         winrate = {}

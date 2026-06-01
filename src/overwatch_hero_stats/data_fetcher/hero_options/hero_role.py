@@ -12,11 +12,13 @@ class DamageRoles(FilterEnum):
     recon=()
 
 class SupportRoles(FilterEnum):
+    support=()
     medic=()
     tactician=()
     survivor=()
 
 class TankRoles(FilterEnum):
+    tank=()
     stalwart=()
     initiator=()
     bruiser=()

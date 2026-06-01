@@ -30,10 +30,12 @@ class main_app:
         herofilters.update_filters()
         fetcher = HeroDataFetcher()
         
-        full_roster = fetcher.get_hero_dict().keys()
+        # full_roster = fetcher.get_hero_dict().keys()
+        role ="damage"
+        role_roster = fetcher.get_hero_dict_by_role(role)
 
         for map in HeroMap.__members__:
-            herofilters.update_filters(map=HeroMap[map].value, role=HeroRole.damage.value, tier=HeroTier.Silver.value,)
+            herofilters.update_filters(map=HeroMap[map].value, role=HeroRole[role].value, tier=HeroTier.Silver.value,)
             hero_data = fetcher.fetch_data(herofilters)
-            best_heroes = fetcher.get_best_hero(hero_ids=full_roster, data=hero_data, count=2)
+            best_heroes = fetcher.get_best_hero(hero_ids=role_roster, data=hero_data, count=2)
             logger.debug(f"Best Heroes ({map}): {best_heroes}")
