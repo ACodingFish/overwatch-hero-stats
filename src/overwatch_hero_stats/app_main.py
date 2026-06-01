@@ -13,4 +13,5 @@ class main_app:
         herofilters.set_filter_value(HFType.MAP, 3)
         fetcher = HeroDataFetcher()
         fetcher.fetch_data(herofilters)
-        fetcher.get_hero_dict()
+        hero_dict = fetcher.get_hero_dict()
+        fetcher.get_winrates_for_heroes()

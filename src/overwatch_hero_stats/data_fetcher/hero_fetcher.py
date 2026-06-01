@@ -58,3 +58,33 @@ class HeroDataFetcher:
         # self.logger.debug(hero_dict)
 
         return hero_dict
+    
+    def get_winrate_for_hero(self, hero_id : str = "anran", rate_list: list = []):
+        winrate = {}
+        for rate in rate_list:
+            if rate.get("id", "unknown") == hero_id:
+                winrate = rate.get("cells", {})
+                break
+        return winrate
+
+    
+    def get_winrates_for_heroes(self, hero_ids: dict[str]=["anran", "genji", "soldier-76"], data: dict = {}):
+        if data == {}:
+            data = self.generic_data
+
+        hero_dict = self.get_hero_dict()
+
+        rate_data : dict = self.generic_data.get("rates", {})
+        rate_list : list = rate_data.get("rates", [])
+
+        hero_winrates = {}
+        for hero_id in hero_ids:
+            if hero_id not in hero_dict:
+                self.logger.warn(f"Could not find hero with id: {hero_id}")
+                continue
+            winrate: dict = self.get_winrate_for_hero(hero_id, rate_list)
+            hero_winrates[hero_id] = winrate
+        return hero_winrates
+            
+
+
