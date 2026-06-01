@@ -41,3 +41,18 @@ class HeroFilters:
     def set_filter_value(self, filter:HFType, index: int):
         if (filter.value < HFType.FILTER_MAX.value):
             self.filters[filter.value] = self.filters[filter.value].get_state_at_index(index)
+
+    def update_filters(self,
+        input: int = HeroInput.PC.value,
+        map: int = HeroMap.all_maps.value,
+        region = HeroRegion.Americas.value,
+        role = HeroRole.All.value,
+        queue_type = HeroQueueType.COMP_Role_Queue.value,
+        tier: int = HeroTier.All.value,
+    ):
+        self.set_filter_value(HFType.INPUT, input)
+        self.set_filter_value(HFType.MAP, map)
+        self.set_filter_value(HFType.REGION, region)
+        self.set_filter_value(HFType.ROLE, role)
+        self.set_filter_value(HFType.QUEUE_TYPE, queue_type)
+        self.set_filter_value(HFType.TIER, tier)

@@ -4,7 +4,7 @@ import requests
 from overwatch_hero_stats.logger import Logger
 from .hero_filters import HeroFilters
 
-TEST_MODE = False
+TEST_MODE = True
 
 if TEST_MODE:
     from .fake_data import fake_data
@@ -25,7 +25,7 @@ class HeroDataFetcher:
         hero_dict :dict = {}
 
         url = self._assemble_URL(herofilters)
-        # self.logger.debug(f"Fetching from URL:{url}")
+        self.logger.debug(f"Fetching from URL:{url}")
 
         if TEST_MODE:
             self.logger.debug("Fake Data")
