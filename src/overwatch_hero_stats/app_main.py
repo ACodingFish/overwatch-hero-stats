@@ -10,4 +10,5 @@ class main_app:
         logger.info("Fetching hero data...")
         herofilters = HeroFilters()
         fetcher = HeroDataFetcher()
-        fetcher.fetch_data(herofilters)
+        # fetcher.fetch_data(herofilters)
+        fetcher.get_hero_dict()
