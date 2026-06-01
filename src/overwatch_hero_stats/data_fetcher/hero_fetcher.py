@@ -25,7 +25,7 @@ class HeroDataFetcher:
         hero_dict :dict = {}
 
         url = self._assemble_URL(herofilters)
-        self.logger.debug(f"Fetching from URL:{url}")
+        # self.logger.debug(f"Fetching from URL:{url}")
 
         if TEST_MODE:
             self.logger.debug("Fake Data")
